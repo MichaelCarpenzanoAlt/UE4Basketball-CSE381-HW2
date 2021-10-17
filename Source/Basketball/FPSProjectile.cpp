@@ -31,12 +31,12 @@ AFPSProjectile::AFPSProjectile()
 		// Use this component to drive this projectile's movement.
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		ProjectileMovementComponent->InitialSpeed = 3000.0f;
-		ProjectileMovementComponent->MaxSpeed = 3000.0f;
+		ProjectileMovementComponent->InitialSpeed = 1500.0f;
+		ProjectileMovementComponent->MaxSpeed = 1500.0f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = true;
 		ProjectileMovementComponent->Bounciness = 0.3f;
-		ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
+		//ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 	}
 	if (!ProjectileMeshComponent)
 	{
@@ -57,7 +57,7 @@ AFPSProjectile::AFPSProjectile()
 	ProjectileMeshComponent->SetupAttachment(RootComponent);
 
 	// Delete the projectile after 3 seconds.
-	InitialLifeSpan = 3.0f;
+	//InitialLifeSpan = 3.0f;
 
 }
 
@@ -87,6 +87,9 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
 	{
 		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
 	}
-
-	Destroy();
+	
+	if (OtherActor != this){ //&& OtherActor->GetName().Compare(L"BP_BasketballCharacter")==0) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *OtherActor->GetName());
+	}
+	//Destroy();
 }
