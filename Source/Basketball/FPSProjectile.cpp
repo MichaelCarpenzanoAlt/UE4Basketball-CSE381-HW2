@@ -21,10 +21,13 @@ AFPSProjectile::AFPSProjectile()
 		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 		// Event called when component hits something.
 		CollisionComponent->OnComponentHit.AddDynamic(this, &AFPSProjectile::OnHit);
+
+		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AFPSProjectile::OnOverlapBegin);
 		// Set the sphere's collision radius.
-		CollisionComponent->InitSphereRadius(15.0f);
+		CollisionComponent->InitSphereRadius(20.0f);
 		// Set the root component to be the collision component.
 		RootComponent = CollisionComponent;
+		
 	}
 	if (!ProjectileMovementComponent)
 	{
@@ -88,8 +91,17 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
 		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
 	}
 	
-	if (OtherActor != this){ //&& OtherActor->GetName().Compare(L"BP_BasketballCharacter")==0) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *OtherActor->GetName());
-	}
+	//if (OtherActor != this)
+	//{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, OtherActor->GetName());
+	//}
+	
 	//Destroy();
+}
+
+void AFPSProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+	if (OtherActor != this)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, OtherActor->GetName());
+	}
 }
