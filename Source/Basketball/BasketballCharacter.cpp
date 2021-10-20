@@ -6,8 +6,23 @@
 // Sets default values
 ABasketballCharacter::ABasketballCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	//if (!CollisionComponent)
+	//{
+		// Use a sphere as a simple collision representation.
+	//	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
+		// Set the sphere's collision profile name to "Projectile".
+	//	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Pawn"));
+		// Event called when component hits something.
+	//	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ABasketballCharacter::OnOverlapBegin);
+		//CollisionComponent->OnComponent.AddDynamic(this, &ABasketballCharacter::OnOverlapBegin);
+		// Set the sphere's collision radius.
+	//	CollisionComponent->InitSphereRadius(40.0f);
+		// Set the root component to be the collision component.
+	//	RootComponent = CollisionComponent;
+	//}
 
 	// --- Configure First-Person Camera ---
 
@@ -40,6 +55,7 @@ ABasketballCharacter::ABasketballCharacter()
 	BasketballMesh->bCastDynamicShadow = false;
 	BasketballMesh->CastShadow = false;
 
+	//SetActorEnableCollision(true);
 	// The owning player doesn't see the regular (third-person) body mesh.
 	GetMesh()->SetOwnerNoSee(true);
 }
@@ -53,6 +69,9 @@ void ABasketballCharacter::BeginPlay()
 	// Display a debug message for five seconds.
 	// The -1 "Key" value argument prevents the message from being updated or refreshed.
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("We are using BasketballCharacter."));
+	isHoldingBall = 1;
+
+
 
 }
 
@@ -60,6 +79,8 @@ void ABasketballCharacter::BeginPlay()
 void ABasketballCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
 
 }
 
@@ -102,18 +123,18 @@ void ABasketballCharacter::MoveRight(float Value)
 
 void ABasketballCharacter::StartJump()
 {
-    bPressedJump = true;
+	bPressedJump = true;
 }
 
 void ABasketballCharacter::StopJump()
 {
-    bPressedJump = false;
+	bPressedJump = false;
 }
 
 void ABasketballCharacter::Fire()
 {
 	// Attempt to fire a projectile.
-	if (ProjectileClass)
+	if (ProjectileClass && isHoldingBall > 0)
 	{
 		// Get the camera transform.
 		FVector CameraLocation;
@@ -122,7 +143,7 @@ void ABasketballCharacter::Fire()
 
 
 		// Set MuzzleOffset to spawn projectiles slightly in front of the camera.
-		MuzzleOffset.Set(100.0f, 0.0f, 0.0f);
+		MuzzleOffset.Set(150.0f, 0.0f, 0.0f);
 
 		// Transform MuzzleOffset from camera space to world space.
 		FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
@@ -147,5 +168,14 @@ void ABasketballCharacter::Fire()
 				Projectile->FireInDirection(LaunchDirection);
 			}
 		}
+		isHoldingBall = 0;
 	}
 }
+
+//void ABasketballCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+//	if (OtherActor != this && OtherComp->IsSimulatingPhysics())
+//	{
+//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, OtherActor->GetName());
+//	}
+
+//}

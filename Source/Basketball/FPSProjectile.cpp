@@ -6,7 +6,7 @@
 // Sets default values
 AFPSProjectile::AFPSProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	if (!RootComponent)
@@ -21,22 +21,25 @@ AFPSProjectile::AFPSProjectile()
 		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 		// Event called when component hits something.
 		CollisionComponent->OnComponentHit.AddDynamic(this, &AFPSProjectile::OnHit);
+
+		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AFPSProjectile::OnOverlapBegin);
 		// Set the sphere's collision radius.
-		CollisionComponent->InitSphereRadius(15.0f);
+		CollisionComponent->InitSphereRadius(20.0f);
 		// Set the root component to be the collision component.
 		RootComponent = CollisionComponent;
+
 	}
 	if (!ProjectileMovementComponent)
 	{
 		// Use this component to drive this projectile's movement.
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-		ProjectileMovementComponent->InitialSpeed = 3000.0f;
-		ProjectileMovementComponent->MaxSpeed = 3000.0f;
+		ProjectileMovementComponent->InitialSpeed = 1500.0f;
+		ProjectileMovementComponent->MaxSpeed = 1500.0f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = true;
 		ProjectileMovementComponent->Bounciness = 0.3f;
-		ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
+		//ProjectileMovementComponent->ProjectileGravityScale = 10.0f;
 	}
 	if (!ProjectileMeshComponent)
 	{
@@ -57,7 +60,7 @@ AFPSProjectile::AFPSProjectile()
 	ProjectileMeshComponent->SetupAttachment(RootComponent);
 
 	// Delete the projectile after 3 seconds.
-	InitialLifeSpan = 3.0f;
+	//InitialLifeSpan = 3.0f;
 
 }
 
@@ -65,7 +68,7 @@ AFPSProjectile::AFPSProjectile()
 void AFPSProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -88,5 +91,18 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
 		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
 	}
 
+	//if (OtherActor != this)
+	//{
+	//		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, OtherActor->GetName());
+	//}
+
 	//Destroy();
+}
+
+void AFPSProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+	if (OtherActor != this)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, OtherActor->GetName());
+		//Destroy();
+	}
 }
