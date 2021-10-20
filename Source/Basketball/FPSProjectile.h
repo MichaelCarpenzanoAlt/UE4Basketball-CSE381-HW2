@@ -29,6 +29,9 @@ public:
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
+	UFUNCTION()
+		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	// Sphere collision component.
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
 		USphereComponent* CollisionComponent;
@@ -47,4 +50,6 @@ public:
 
 	// Function that initializes the projectile's velocity in the shoot direction.
 	void FireInDirection(const FVector& ShootDirection);
+
+
 };
