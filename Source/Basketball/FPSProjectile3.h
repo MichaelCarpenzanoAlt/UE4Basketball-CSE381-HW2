@@ -6,16 +6,16 @@
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "FPSProjectile.generated.h"
+#include "FPSProjectile3.generated.h"
 
 UCLASS()
-class BASKETBALL_API AFPSProjectile : public AActor
+class BASKETBALL_API AFPSProjectile3 : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AFPSProjectile();
+	AFPSProjectile3();
 
 protected:
 	// Called when the game starts or when spawned
