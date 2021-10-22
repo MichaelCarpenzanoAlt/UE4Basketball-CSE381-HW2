@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "FPSProjectile.h"
+#include "FPSProjectile3.h"
 
 // Sets default values
-AFPSProjectile::AFPSProjectile()
+AFPSProjectile3::AFPSProjectile3()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -16,14 +16,15 @@ AFPSProjectile::AFPSProjectile()
 	}
 	if (!CollisionComponent)
 	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("test"));
 		// Use a sphere as a simple collision representation.
 		CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 		// Set the sphere's collision profile name to "Projectile".
 		CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 		// Event called when component hits something.
-		CollisionComponent->OnComponentHit.AddDynamic(this, &AFPSProjectile::OnHit);
+		CollisionComponent->OnComponentHit.AddDynamic(this, &AFPSProjectile3::OnHit);
 
-		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AFPSProjectile::OnOverlapBegin);
+		CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AFPSProjectile3::OnOverlapBegin);
 		// Set the sphere's collision radius.
 		CollisionComponent->InitSphereRadius(20.0f);
 		// Set the root component to be the collision component.
@@ -32,6 +33,7 @@ AFPSProjectile::AFPSProjectile()
 	}
 	if (!ProjectileMovementComponent)
 	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("test"));
 		// Use this component to drive this projectile's movement.
 		ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 		ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
@@ -44,6 +46,7 @@ AFPSProjectile::AFPSProjectile()
 	}
 	if (!ProjectileMeshComponent)
 	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("test"));
 		ProjectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMeshComponent"));
 		static ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh(TEXT("'/Game/Sphere.Sphere'"));
 		if (Mesh.Succeeded())
@@ -52,9 +55,9 @@ AFPSProjectile::AFPSProjectile()
 		}
 	}
 
-	//Tags.Add(FName("Red"));
+	Tags.Add(FName("Second"));
 
-	static ConstructorHelpers::FObjectFinder<UMaterial>Material(TEXT("'/Game/SphereMaterial.SphereMaterial'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial>Material(TEXT("'/Game/SphereMaterial2.SphereMaterial2'"));
 	if (Material.Succeeded())
 	{
 		ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
@@ -69,26 +72,26 @@ AFPSProjectile::AFPSProjectile()
 }
 
 // Called when the game starts or when spawned
-void AFPSProjectile::BeginPlay()
+void AFPSProjectile3::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
 // Called every frame
-void AFPSProjectile::Tick(float DeltaTime)
+void AFPSProjectile3::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
 // Function that initalizes the projectile's velocity in the shoot direction.
-void AFPSProjectile::FireInDirection(const FVector& ShootDirection)
+void AFPSProjectile3::FireInDirection(const FVector& ShootDirection)
 {
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
 
-void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+void AFPSProjectile3::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
 	{
@@ -103,10 +106,11 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
 	//Destroy();
 }
 
-void AFPSProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+void AFPSProjectile3::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	if (OtherActor != this)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, OtherActor->GetName());
 		//Destroy();
 	}
 }
+

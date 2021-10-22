@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "FPSProjectile.h"
+#include "FPSProjectile3.h"
 #include "BasketballCharacter.generated.h"
 
 UCLASS()
@@ -22,11 +23,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AFPSProjectile3> ProjectileClass3;
+
 	// Projectile class to spawn.
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AFPSProjectile> ProjectileClass;
 
-public:	
+	
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -53,6 +59,13 @@ public:
 	UFUNCTION()
 		void Fire();
 
+	//UFUNCTION()
+	//	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	// Sphere collision component.
+	//UPROPERTY()
+	//	USphereComponent* CollisionComponent;
+
 	// Basketball (FPS) Camera
 	UPROPERTY(VisibleAnywhere)
 		UCameraComponent* BasketballCameraComponent;
@@ -64,4 +77,7 @@ public:
 	// Gun muzzle offset from the camera location.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		int isHoldingBall;
 };
