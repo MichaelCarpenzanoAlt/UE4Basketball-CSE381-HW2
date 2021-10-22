@@ -39,7 +39,7 @@ AFPSProjectile::AFPSProjectile()
 		ProjectileMovementComponent->MaxSpeed = 1500.0f;
 		ProjectileMovementComponent->bRotationFollowsVelocity = true;
 		ProjectileMovementComponent->bShouldBounce = true;
-		ProjectileMovementComponent->Bounciness = 0.3f;
+		ProjectileMovementComponent->Bounciness = 0.1f;
 		//ProjectileMovementComponent->ProjectileGravityScale = 10.0f;
 	}
 	if (!ProjectileMeshComponent)
