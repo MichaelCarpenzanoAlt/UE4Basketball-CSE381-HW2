@@ -134,8 +134,10 @@ void ABasketballCharacter::StopJump()
 void ABasketballCharacter::Fire()
 {
 	// Attempt to fire a projectile.
+	
 	if (ProjectileClass && isHoldingBall > 0)
 	{
+		
 		// Get the camera transform.
 		FVector CameraLocation;
 		FRotator CameraRotation;
@@ -158,7 +160,35 @@ void ABasketballCharacter::Fire()
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = GetInstigator();
-
+			//AFPSProjectile* Projectile;
+			if (isHoldingBall == 1) {
+				
+				// Spawn the projectile at the muzzle.
+				AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+				if (Projectile)
+				{
+					// Set the projectile's initial trajectory.
+					FVector LaunchDirection = MuzzleRotation.Vector();
+					Projectile->FireInDirection(LaunchDirection);
+				}
+			}
+			else if (isHoldingBall == 2) {
+				// Spawn the projectile at the muzzle.
+				
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Firing proj2"));
+				
+				AFPSProjectile3* Projectile3 = World->SpawnActor<AFPSProjectile3>(AFPSProjectile3::StaticClass(), MuzzleLocation, MuzzleRotation, SpawnParams);
+				
+				if (Projectile3)
+				{
+					
+					// Set the projectile's initial trajectory.
+					FVector LaunchDirection = MuzzleRotation.Vector();
+					
+					Projectile3->FireInDirection(LaunchDirection);
+				}
+			}
+			/*
 			// Spawn the projectile at the muzzle.
 			AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams);
 			if (Projectile)
@@ -167,6 +197,8 @@ void ABasketballCharacter::Fire()
 				FVector LaunchDirection = MuzzleRotation.Vector();
 				Projectile->FireInDirection(LaunchDirection);
 			}
+			*/
+			
 		}
 		isHoldingBall = 0;
 	}
